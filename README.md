@@ -21,6 +21,8 @@ It covers data ingestion, transformation, and modeling following a **medallion a
 
 ![image alt](https://github.com/Charvi-M-J/PYSPARK-X-DBT/blob/b68ea73d1368d144f3779eda9a150991be47f5ec/Screenshot%202025-10-07%20185935.png)
 
+![image alt](https://github.com/Charvi-M-J/PYSPARK-X-DBT/blob/0737b42c33a78d05dc4159d8b5d5b451fa383e77/Screenshot%202025-10-07%20200528.png)
+
 🌟 Key Learnings
 
 * Data ingestion with PySpark and streaming CSVs

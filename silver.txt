@@ -1,0 +1,50 @@
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+from typing import List
+from pyspark.sql import DataFrame
+from pyspark.sql.window import Window
+from delta.tables import DeltaTable
+from custom_utils import transformations
+
+    def dedup(self,df:DataFrame,dedup_cols:List,cdc:str):
+        df = df.withColumn("dedupKey",concat(*dedup_cols))
+        df = df.withColumn("dedupKey",row_number()\
+                          .over(Window.partitionBy("dedupKey").orderBy(desc(cdc))))
+        df = df.filter(col('dedupCounts')==1)
+        df = df.drop("dedupKey","dedupCounts")
+        return df
+    
+    def process_timestamp(self,df):
+        df = df.withColumn("process_timestamp",current_timestamp())
+        return df
+    
+    def upsert(self,df,key_cols,table,cdc):
+        merge_condition = " AND ".join([f"src.{i} = trg.{i}"for i in key_cols])
+        dlt_obj = DeltaTable.forName(spark,f"pysparkdbt.silver.{table}")
+        dlt_obj.alias("trg").merge(df.alias("src"), merge_condition)\
+                            .whenMatchedUpdateAll(condition = f"src.{cdc} >= trg.{cdc}")\
+                            .whenNotMatchedInsertAll()\
+                            .execute()    
+
+        return 1
+current_dir = os.getcwd()
+sys.path.append(current_dir)
+
+df_cust = spark.read.table("pysparkdbt.bronze.customers")
+
+df_cust = df_cust.withColumn("domain", split(col('email'), '@')[1])
+display(df_cust)
+
+df_cust = df_cust.withColumn("phone_number", regexp_replace("phone_number", r"[^0-9]",""))
+display(df_cust)
+
+df_cust = df_cust.withColumn("full_name", concat_ws(" ",col('first_name'),col('last_name')))
+df_cust = df_cust.drop('first_name','last_name')
+display(df_cust)
+
+df_driver = driver_obj.dedup(df_driver,['driver_id'],'last_updated_timestamp')
+
+df_driver = driver_obj.process_timestamp(df_driver)
+
+df_loc = loc_obj.dedup(df_loc,['location_id'],'last_updated_timestamp')
+df_loc = loc_obj.process_timestamp(df_loc)

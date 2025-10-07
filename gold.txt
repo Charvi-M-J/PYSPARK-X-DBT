@@ -1,0 +1,31 @@
+from typing import List
+from pyspark.sql import DataFrame
+from pyspark.sql.window import Window
+
+class transformationss:
+    def dedup(self,df:DataFrame,dedup_cols:List,cdc:str):
+
+        df = df.withColumn("dedupKey",concat(*dedup_cols))
+        df = df.withColumn("dedupKey",row_number().over(Window.partitionBy("dedupKey").orderBy(cdc)))
+        df = df.filter(col('dedupCounts')==1)
+        df = df.drop("dedupKey","dedupCounts")
+
+        return df
+
+
+select *
+from {{ ref('my_first_dbt_model') }}
+where id = 1
+
+{{ config(materialized='table') }}
+
+with source_data as (
+
+    select 1 as id
+    union all
+    select null as id
+
+)
+
+select *
+from source_data

@@ -19,6 +19,9 @@ It covers data ingestion, transformation, and modeling following a **medallion a
    - The transformed data is ready for BI tools or ML model consumption.
 
 ![image alt](https://github.com/Charvi-M-J/PYSPARK-X-DBT/blob/90e63ac3753d549f950b02e3608822067eca1a0e/Screenshot%202025-10-07%20190043.png)
+
+![image alt](https://github.com/Charvi-M-J/PYSPARK-X-DBT/blob/b68ea73d1368d144f3779eda9a150991be47f5ec/Screenshot%202025-10-07%20185935.png)
+
 🌟 Key Learnings
 
 * Data ingestion with PySpark and streaming CSVs

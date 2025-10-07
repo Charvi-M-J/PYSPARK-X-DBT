@@ -5,6 +5,7 @@ It covers data ingestion, transformation, and modeling following a **medallion a
 
 ![image alt](https://github.com/Charvi-M-J/PYSPARK-X-DBT/blob/daf4bb61ec12dbc17f29c661855cb9532b50421b/screenshot.png)
 
+
 🔁 Pipeline Flow
 1. Streaming Data Source:  
    - Input data in CSV format is continuously streamed into the system.
